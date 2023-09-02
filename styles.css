@@ -1,0 +1,69 @@
+body{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    height: 200px;
+    background-color: #034aae;
+}
+
+.state-image-box{
+    text-align: right;
+    padding-bottom: 40px;
+}
+
+.state-image-box h1{
+    margin: 0;
+}
+
+.man-left-1,
+.man-left-2, 
+.man-left-3, 
+.devil-left-1,
+.devil-left-2,
+.devil-left-3,
+.man-right-1,
+.man-right-2, 
+.man-right-3, 
+.devil-right-1,
+.devil-right-2,
+.devil-right-3,
+.state-image
+{
+    width: 20px;
+    height: 20px;
+}
+
+.left-bank, .right-bank{
+    display: flex;
+    height: 40px;
+    background-color: white
+}
+
+.wooden-plank-1, .wooden-plank-2 {
+    width: 150px;
+    height: 20px;
+    background-color: #8B4513;
+}
+
+.boat-left, .boat-right{
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.pond {
+    height: 40px;
+    width: 180px;
+    background-color: white;
+}

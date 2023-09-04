@@ -1,3 +1,11 @@
+const fs = require("fs");
+const { exec } = require("child_process");
+tree = [];
+
+from = [];
+to = [];
+weight = [];
+
 class Node {
   constructor(state, parent, action, depth) {
     this.parent = parent;
@@ -83,13 +91,8 @@ class Node {
       path = path.parent;
       solution.push(path.action);
     }
-    // solution = solution.splice(-1);
     solution.pop();
     solution.reverse();
-    for (const each of solution) {
-      console.log(each);
-    }
-    // console.log("hi");
     return solution;
   }
 }
@@ -117,7 +120,7 @@ function bfs(initialState) {
   q = [];
   q.push(startNode);
   let explored = [];
-  // let killed = [];
+  let killed = [];
   console.log(`The starting node is \ndepth = ${startNode.depth}`);
   console.log(startNode.state);
   while (!(q.length == 0)) {
@@ -136,19 +139,75 @@ function bfs(initialState) {
           console.log(`depth = ${child.depth}`);
           console.log(child.state);
           if (child.isGoal()) {
+            from.push(node.state);
+            to.push(child.state);
+            weight.push(child.action);
             console.log("which is the goal state\n");
-            return child.findSolution();
+            return { solution: child.findSolution(), killedNodes: killed };
           }
           if (child.isValid()) {
             q.push(child);
+            from.push(node.state);
+            to.push(child.state);
+            weight.push(child.action);
             explored.push(child.state);
           }
         }
       }
+    } else {
+      killed.push(node.state);
     }
   }
 }
 
 let initialState = [3, 3, 1];
-solution = bfs(initialState);
-console.log(solution);
+const res = bfs(initialState);
+console.log(res["solution"]);
+
+for (let i = 0; i < to.length; i++) {
+  let contains = false;
+  for (const node of res["killedNodes"]) {
+    if (to[i][0] == node[0] && to[i][1] == node[1] && to[i][2] == node[2]) {
+      contains = true;
+      break;
+    }
+  }
+  if (contains) {
+    let appendData =
+      JSON.stringify(from[i]) +
+      " " +
+      JSON.stringify(to[i]) +
+      " " +
+      JSON.stringify(weight[i]) +
+      " " +
+      "1" +
+      "\n";
+    tree.push(appendData);
+  } else {
+    let appendData =
+      JSON.stringify(from[i]) +
+      " " +
+      JSON.stringify(to[i]) +
+      " " +
+      JSON.stringify(weight[i]) +
+      " " +
+      "0" +
+      "\n";
+    tree.push(appendData);
+  }
+}
+
+fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log("File write completed. Executing drawGraph.js...");
+    exec("node ./StateSpace/drawGraph.js", (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error executing drawGraph.js: ${error}`);
+        return;
+      }
+      console.log(`drawGraph.js executed successfully.`);
+    });
+  }
+});

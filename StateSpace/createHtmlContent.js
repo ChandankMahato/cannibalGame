@@ -52,12 +52,22 @@ function createHtmlContent(nodes, edges, type) {
                   : node.color == "0"
                   ? "green"
                   : "yellow",
+              level: node.level
             }))
           )},
           edges: ${JSON.stringify(weightedEdges)}
         };
         const options = { physics: false };
+        options.layout = {
+          "hierarchical": true
+        }
+        // var network = 
         new vis.Network(container, data, options);
+
+        // network.on("afterDrawing", function (ctx) {
+        //   var dataURL = ctx.canvas.toDataURL();
+        //   document.getElementById('canvasImg').src = dataURL;
+        // });
       </script>
     </body>
     </html>

@@ -57,11 +57,8 @@ class Node {
 
     let op = -1;
 
-    let boat_move = "from left to right";
-
     if (this.state[2] == 0) {
       op = 1;
-      boat_move = "from right to left";
     }
 
     for (let x = 0; x < 3; x++) {
@@ -86,7 +83,7 @@ class Node {
   findSolution() {
     let solution = [];
     solution.push(this.action);
-    let path = new Node(this.state, this.parent, this.action, this.depth);
+    let path = new Node(this.state, this.parent, this.action);
     while (path.parent != null) {
       path = path.parent;
       solution.push(path.action);
@@ -121,34 +118,34 @@ function bfs(initialState) {
   q.push(startNode);
   let explored = [];
   let killed = [];
-  console.log(`The starting node is \ndepth = ${startNode.depth}`);
+  let opened = [];
   console.log(startNode.state);
   while (!(q.length == 0)) {
     let node = q.shift();
-    console.log(
-      `\nthe node selected to expand is\ndepth=${node.depth}\n${node.state}\n`
-    );
+    console.log(`\nThe node to expand is ${node.state}\n`);
     explored.push(node.state);
-    if (node.parent != null) {
-    }
     let children = node.generateChild();
     if (!node.isKilled()) {
-      console.log(`the children nodes of this node are`);
+      opened.push(node.state);
+      console.log(`The children of ${node.state}:`);
       for (const child of children) {
         if (!existsIn(explored, child.state)) {
-          console.log(`depth = ${child.depth}`);
           console.log(child.state);
           if (child.isGoal()) {
-            from.push(node.state);
-            to.push(child.state);
+            from.push([node.state, node.depth]);
+            to.push([child.state, child.depth]);
             weight.push(child.action);
-            console.log("which is the goal state\n");
-            return { solution: child.findSolution(), killedNodes: killed };
+            console.log("\n");
+            return {
+              solution: child.findSolution(),
+              killedNodes: killed,
+              opened: opened,
+            };
           }
           if (child.isValid()) {
             q.push(child);
-            from.push(node.state);
-            to.push(child.state);
+            from.push([node.state, node.depth]);
+            to.push([child.state, child.depth]);
             weight.push(child.action);
             explored.push(child.state);
           }
@@ -167,33 +164,72 @@ console.log(res["solution"]);
 for (let i = 0; i < to.length; i++) {
   let contains = false;
   for (const node of res["killedNodes"]) {
-    if (to[i][0] == node[0] && to[i][1] == node[1] && to[i][2] == node[2]) {
+    if (
+      to[i][0][0] == node[0] &&
+      to[i][0][1] == node[1] &&
+      to[i][0][2] == node[2]
+    ) {
       contains = true;
       break;
     }
   }
   if (contains) {
     let appendData =
-      JSON.stringify(from[i]) +
+      JSON.stringify(from[i][0]) +
       " " +
-      JSON.stringify(to[i]) +
+      JSON.stringify(to[i][0]) +
       " " +
       JSON.stringify(weight[i]) +
       " " +
       "1" +
+      " " +
+      JSON.stringify(from[i][1]) +
+      " " +
+      JSON.stringify(to[i][1]) +
       "\n";
     tree.push(appendData);
   } else {
-    let appendData =
-      JSON.stringify(from[i]) +
-      " " +
-      JSON.stringify(to[i]) +
-      " " +
-      JSON.stringify(weight[i]) +
-      " " +
-      "0" +
-      "\n";
-    tree.push(appendData);
+    let explored = true;
+    // for (const node of res["opened"]) {
+    //   if (to[i][0] == node[0] && to[i][1] != node[1] && to[i][2] != node[2]) {
+    //     explored = false;
+    //     break;
+    //   }
+    // }
+    if (
+      existsIn(res["opened"], to[i][0]) ||
+      (to[i][0][0] == "0" && to[i][0][1] == "0" && to[i][0][2] == "0")
+    ) {
+      let appendData =
+        JSON.stringify(from[i][0]) +
+        " " +
+        JSON.stringify(to[i][0]) +
+        " " +
+        JSON.stringify(weight[i]) +
+        " " +
+        "0" +
+        " " +
+        JSON.stringify(from[i][1]) +
+        " " +
+        JSON.stringify(to[i][1]) +
+        "\n";
+      tree.push(appendData);
+    } else {
+      let appendData =
+        JSON.stringify(from[i][0]) +
+        " " +
+        JSON.stringify(to[i][0]) +
+        " " +
+        JSON.stringify(weight[i]) +
+        " " +
+        "2" +
+        " " +
+        JSON.stringify(from[i][1]) +
+        " " +
+        JSON.stringify(to[i][1]) +
+        "\n";
+      tree.push(appendData);
+    }
   }
 }
 

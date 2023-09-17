@@ -29,6 +29,9 @@ function createHtmlContent(nodes, edges, type) {
       </style>
     </head>
     <body>
+    <h3> Red: Killed </h3>
+    <h3> Green: Explored </h3>
+    <h3> Yellow: Unexplored </h3>
       <div id="nav-bar">
         <h1>Network Graph ${type}</h1>
       </div>
@@ -40,7 +43,16 @@ function createHtmlContent(nodes, edges, type) {
         const container = document.getElementById('graph-container');
         const data = {
           nodes: ${JSON.stringify(
-            nodes.map((node) => ({ id: node.id, label: node.id, color: node.color == 1 ? 'red' : 'green'}))
+            nodes.map((node) => ({
+              id: node.id,
+              label: node.id,
+              color:
+                node.color == 1
+                  ? "red"
+                  : node.color == "0"
+                  ? "green"
+                  : "yellow",
+            }))
           )},
           edges: ${JSON.stringify(weightedEdges)}
         };

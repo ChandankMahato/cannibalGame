@@ -159,7 +159,7 @@ function bfs(initialState) {
 
 let initialState = [3, 3, 1];
 const res = bfs(initialState);
-console.log(res["solution"]);
+// console.log(res["solution"]);
 
 for (let i = 0; i < to.length; i++) {
   let contains = false;
@@ -233,6 +233,15 @@ for (let i = 0; i < to.length; i++) {
   }
 }
 
+function forFileWrite(arr) {
+  let convertedData = [];
+  for (data of arr) {
+    let converted = JSON.stringify(data) + "\n";
+    convertedData.push(converted);
+  }
+  return convertedData;
+}
+
 fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
   if (err) {
     console.error(err);
@@ -247,3 +256,15 @@ fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
     });
   }
 });
+
+fs.writeFile(
+  "./StateSpace/solution.txt",
+  forFileWrite(res["solution"]).join("").trim(),
+  (err) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log("File write completed. Executing Game....");
+    }
+  }
+);

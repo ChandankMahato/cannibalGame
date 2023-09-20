@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { exec } = require("child_process");
+const { createScriptFile } = require("./UI");
 tree = [];
 
 from = [];
@@ -236,7 +237,7 @@ for (let i = 0; i < to.length; i++) {
 function forFileWrite(arr) {
   let convertedData = [];
   for (data of arr) {
-    let converted = JSON.stringify(data) + "\n";
+    let converted = JSON.stringify(data) + ",";
     convertedData.push(converted);
   }
   return convertedData;
@@ -258,13 +259,18 @@ fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
 });
 
 fs.writeFile(
-  "./StateSpace/solution.txt",
-  forFileWrite(res["solution"]).join("").trim(),
+  "./UI/script.js",
+  createScriptFile(forFileWrite(res["solution"]).join("").trim()),
   (err) => {
     if (err) {
       console.error(err);
-    } else {
-      console.log("File write completed. Executing Game....");
+      return;
     }
+    console.log("./script.js file created successfully.");
+    exec("start ./UI/index.html", (error) => {
+      if (error) {
+        console.error(`Error opening file: ${error}`);
+      }
+    });
   }
 );

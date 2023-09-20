@@ -1,22 +1,23 @@
-
+function createScriptFile(solution) {
+  return `
     var boatLeft = document.querySelector(".boat-left");
     var boatRight = document.querySelector(".boat-right");
 
-    var AllState = [[0,2,-1],[0,1,1],[0,2,-1],[0,1,1],[2,0,-1],[1,1,1],[2,0,-1],[0,1,1],[0,2,-1],[0,1,1],[0,2,-1],];
+    var AllState = [${solution}];
 
     function resetStyles() {
       boatLeft.style.display = "";
       boatRight.style.display = "";
 
       for (let i = 1; i <= 3; i++) {
-        var devilRight = document.querySelector(`.devil-right-${i}`);
+        var devilRight = document.querySelector(\`.devil-right-\${i}\`);
         devilRight.style.display = "";
-        var devilLeft = document.querySelector(`.devil-left-${i}`);
+        var devilLeft = document.querySelector(\`.devil-left-\${i}\`);
         devilLeft.style.display = "";
 
-        var manRight = document.querySelector(`.man-right-${i}`);
+        var manRight = document.querySelector(\`.man-right-\${i}\`);
         manRight.style.display = "";
-        var manLeft = document.querySelector(`.man-left-${i}`);
+        var manLeft = document.querySelector(\`.man-left-\${i}\`);
         manLeft.style.display = "";
       }
     }
@@ -37,16 +38,16 @@
       if (JSON.stringify(currentState) === JSON.stringify([0, 0, 0])) {
         document.getElementById("wooden-plank-2").style.marginTop = "25px";
         for (let i = 1; i <= 3; i++) {
-          var devilRight = document.querySelector(`.devil-right-${i}`);
+          var devilRight = document.querySelector(\`.devil-right-\${i}\`);
           devilRight.style.display = "none";
-          var manRight = document.querySelector(`.man-right-${i}`);
+          var manRight = document.querySelector(\`.man-right-\${i}\`);
           manRight.style.display = "none";
         }
         boatRight.style.display = "none";
         for (let i = 1; i <= 3; i++) {
-          var devilLeft = document.querySelector(`.devil-left-${i}`);
+          var devilLeft = document.querySelector(\`.devil-left-\${i}\`);
           devilLeft.style.display = "";
-          var manLeft = document.querySelector(`.man-left-${i}`);
+          var manLeft = document.querySelector(\`.man-left-\${i}\`);
           manLeft.style.display = "";
         }
         boatLeft.style.display = "";
@@ -61,21 +62,21 @@
 
         let devilCount = 3 - currentState[0];
         for (let i = 1; i <= devilCount; i++) {
-          var devilElement = document.querySelector(`.devil-right-${i}`);
+          var devilElement = document.querySelector(\`.devil-right-\${i}\`);
           devilElement.style.display = "none";
         }
         for (let i = 1; i <= currentState[0]; i++) {
-          var devilElement = document.querySelector(`.devil-left-${i}`);
+          var devilElement = document.querySelector(\`.devil-left-\${i}\`);
           devilElement.style.display = "none";
         }
         let manCount = 3 - currentState[1];
         for (let i = 1; i <= manCount; i++) {
-          var manElement = document.querySelector(`.man-right-${i}`);
+          var manElement = document.querySelector(\`.man-right-\${i}\`);
           manElement.style.display = "none";
         }
 
         for (let i = 1; i <= currentState[1]; i++) {
-          var manElement = document.querySelector(`.man-left-${i}`);
+          var manElement = document.querySelector(\`.man-left-\${i}\`);
           manElement.style.display = "none";
         }
       }
@@ -91,4 +92,9 @@
     }
 
     processNextState(0);
-  
+  `;
+}
+
+module.exports = {
+    createScriptFile
+}

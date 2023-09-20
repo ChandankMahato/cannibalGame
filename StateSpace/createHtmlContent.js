@@ -10,31 +10,60 @@ function createHtmlContent(nodes, edges, type) {
     <html>
     <head>
       <title>Graph Visualization</title>
-      <style>
-        #network-container {
-          display: flex;
-          width: 100%;
-          height: 85vh;
-          border: 2px solid lightgray;
-        }
+       <style>
+    #network-container {
+      display: flex;
+      width: 100%;
+      height: 550px;
+      border: 2px solid lightgray;
+    }
 
-        #nav-bar {
-          width: 100%;
-          height: 60px;
-        }
+    #nav-bar {
+      width: 100%;
+    }
 
-        h1 {
-          text-align: center;
-        }
-      </style>
+    h1 {
+      text-align: center;
+    }
+
+    h3 {
+      display: block;
+    }
+
+    .legend {
+      width: 100%;
+      text-align: center;
+      display: flex;
+    }
+
+    .red,
+    .green,
+    .yellow {
+      width: 33%;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+  </style>
     </head>
     <body>
-    <h3> Red: Killed </h3>
-    <h3> Green: Explored </h3>
-    <h3> Yellow: Unexplored </h3>
-      <div id="nav-bar">
-        <h1>Network Graph ${type}</h1>
-      </div>
+    <div id="nav-bar">
+    <h1>Cannibal Missionary Problem State Space Tree</h1>
+    <div class="legend">
+      <h2 class="red">Killed</h2>
+      <h2 class="green">Explored</h2>
+      <h2 class="yellow">Unexplored</h2>
+    </div>
+  </div>
       <div id="network-container"> 
         <div id="graph-container"></div>
       </div>
@@ -57,17 +86,25 @@ function createHtmlContent(nodes, edges, type) {
           )},
           edges: ${JSON.stringify(weightedEdges)}
         };
-        const options = { physics: false };
-        options.layout = {
-          "hierarchical": true
+        const options = {
+      layout: {
+        hierarchical: {
+          direction: 'UD',
+          sortMethod: 'directed',
+          levelSeparation: 80,
+          nodeSpacing: 150,
         }
-        // var network = 
+      },
+      physics: {
+        enabled: false
+      },
+      nodes: {
+        font: {
+          size: 28
+        }
+      }
+    };
         new vis.Network(container, data, options);
-
-        // network.on("afterDrawing", function (ctx) {
-        //   var dataURL = ctx.canvas.toDataURL();
-        //   document.getElementById('canvasImg').src = dataURL;
-        // });
       </script>
     </body>
     </html>

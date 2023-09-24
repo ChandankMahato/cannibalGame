@@ -1,11 +1,10 @@
 const fs = require("fs");
 const { exec } = require("child_process");
-const { createScriptFile } = require("./UI");
-tree = [];
 
-from = [];
-to = [];
-weight = [];
+let tree = [];
+let from = [];
+let to = [];
+let weight = [];
 
 class Node {
   constructor(state, parent, action, depth) {
@@ -93,6 +92,19 @@ class Node {
     solution.reverse();
     return solution;
   }
+
+  isSolution() {
+    let solution = [];
+    solution.push(this.action);
+    let path = new Node(this.state, this.parent, this.action);
+    while (path.parent != null) {
+      path = path.parent;
+      if (path.isKilled()) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 function existsIn(main, check) {
@@ -117,64 +129,61 @@ function bfs(initialState) {
 
   q = [];
   q.push(startNode);
-  let explored = [];
-  let killed = [];
-  let opened = [];
-  console.log(startNode.state);
   while (!(q.length == 0)) {
     let node = q.shift();
     console.log(`\nThe node to expand is ${node.state}\n`);
-    explored.push(node.state);
     let children = node.generateChild();
-    if (!node.isKilled()) {
-      opened.push(node.state);
-      console.log(`The children of ${node.state}:`);
-      for (const child of children) {
-        if (!existsIn(explored, child.state)) {
-          console.log(child.state);
-          if (child.isGoal()) {
-            from.push([node.state, node.depth]);
-            to.push([child.state, child.depth]);
-            weight.push(child.action);
-            console.log("\n");
-            return {
-              solution: child.findSolution(),
-              killedNodes: killed,
-              opened: opened,
-            };
-          }
-          if (child.isValid()) {
-            q.push(child);
-            from.push([node.state, node.depth]);
-            to.push([child.state, child.depth]);
-            weight.push(child.action);
-            explored.push(child.state);
-          }
+    console.log(`The children of ${node.state}:`);
+    for (const child of children) {
+      if (child.isGoal()) {
+        from.push([node.state, node.depth]);
+        to.push([child.state, child.depth]);
+        weight.push(child.action);
+        console.log("\n");
+        let isSolution = child.isSolution();
+
+        if (!isSolution) {
+          break;
         }
+        return {
+          solution: child.findSolution(),
+          //   killedNodes: killed,
+          //   opened: opened,
+        };
       }
-    } else {
-      killed.push(node.state);
+      if (child.depth > 3) {
+        return {
+          solution: "Solution not found",
+        };
+      }
+      if (child.isValid()) {
+        q.push(child);
+        from.push([node.state, node.depth]);
+        to.push([child.state, child.depth]);
+        weight.push(child.action);
+        // explored.push(child.state);
+      }
     }
   }
 }
 
 let initialState = [3, 3, 1];
 const res = bfs(initialState);
-// console.log(res["solution"]);
+console.log(res);
 
 for (let i = 0; i < to.length; i++) {
-  let contains = false;
-  for (const node of res["killedNodes"]) {
+  let isSolution = false;
+  for (const node of res["solution"]) {
     if (
-      to[i][0][0] == node[0] &&
-      to[i][0][1] == node[1] &&
-      to[i][0][2] == node[2]
+      weight[i][0] == node[0] &&
+      weight[i][1] == node[1] &&
+      weight[i][2] == node[2]
     ) {
-      contains = true;
+      isSolution = true;
       break;
     }
   }
-  if (contains) {
+  if (isSolution) {
     let appendData =
       JSON.stringify(from[i][0]) +
       " " +
@@ -190,67 +199,31 @@ for (let i = 0; i < to.length; i++) {
       "\n";
     tree.push(appendData);
   } else {
-    let explored = true;
-    // for (const node of res["opened"]) {
-    //   if (to[i][0] == node[0] && to[i][1] != node[1] && to[i][2] != node[2]) {
-    //     explored = false;
-    //     break;
-    //   }
-    // }
-    if (
-      existsIn(res["opened"], to[i][0]) ||
-      (to[i][0][0] == "0" && to[i][0][1] == "0" && to[i][0][2] == "0")
-    ) {
-      let appendData =
-        JSON.stringify(from[i][0]) +
-        " " +
-        JSON.stringify(to[i][0]) +
-        " " +
-        JSON.stringify(weight[i]) +
-        " " +
-        "0" +
-        " " +
-        JSON.stringify(from[i][1]) +
-        " " +
-        JSON.stringify(to[i][1]) +
-        "\n";
-      tree.push(appendData);
-    } else {
-      let appendData =
-        JSON.stringify(from[i][0]) +
-        " " +
-        JSON.stringify(to[i][0]) +
-        " " +
-        JSON.stringify(weight[i]) +
-        " " +
-        "2" +
-        " " +
-        JSON.stringify(from[i][1]) +
-        " " +
-        JSON.stringify(to[i][1]) +
-        "\n";
-      tree.push(appendData);
-    }
+    let appendData =
+      JSON.stringify(from[i][0]) +
+      " " +
+      JSON.stringify(to[i][0]) +
+      " " +
+      JSON.stringify(weight[i]) +
+      " " +
+      "0" +
+      " " +
+      JSON.stringify(from[i][1]) +
+      " " +
+      JSON.stringify(to[i][1]) +
+      "\n";
+    tree.push(appendData);
   }
 }
 
-function forFileWrite(arr) {
-  let convertedData = [];
-  for (data of arr) {
-    let converted = JSON.stringify(data) + ",";
-    convertedData.push(converted);
-  }
-  return convertedData;
-}
-
-function forSolutionWrite(arr) {
-  let convertedData = [];
-  for (data of arr) {
-    let converted = JSON.stringify(data) + "\n";
-    convertedData.push(converted);
-  }
-  return convertedData;
-}
+// function forFileWrite(arr) {
+//   let convertedData = [];
+//   for (data of arr) {
+//     let converted = JSON.stringify(data) + ",";
+//     convertedData.push(converted);
+//   }
+//   return convertedData;
+// }
 
 fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
   if (err) {
@@ -267,29 +240,19 @@ fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
   }
 });
 
-fs.writeFile(
-  "./UI/script.js",
-  createScriptFile(forFileWrite(res["solution"]).join("").trim()),
-  (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log("./script.js file created successfully.");
-    exec("start ./UI/index.html", (error) => {
-      if (error) {
-        console.error(`Error opening file: ${error}`);
-      }
-    });
-  }
-);
-
-fs.writeFile(
-  "./solution/sol.txt",
-  forSolutionWrite(res["solution"]).join("").trim(),
-  (err) => {
-    if (err) {
-      console.error(err);
-    }
-  }
-);
+// fs.writeFile(
+//   "./UI/script.js",
+//   createScriptFile(forFileWrite(res["solution"]).join("").trim()),
+//   (err) => {
+//     if (err) {
+//       console.error(err);
+//       return;
+//     }
+//     console.log("./script.js file created successfully.");
+//     exec("start ./UI/index.html", (error) => {
+//       if (error) {
+//         console.error(`Error opening file: ${error}`);
+//       }
+//     });
+//   }
+// );

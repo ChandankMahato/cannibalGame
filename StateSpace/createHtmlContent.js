@@ -80,8 +80,10 @@ function createHtmlContent(nodes, edges, type) {
                   ? "red"
                   : node.color == "0"
                   ? "green"
-                  : "yellow",
-              level: node.level
+                  : node.color == "2"
+                  ? "yellow"
+                  : "blue",
+              level: node.level,
             }))
           )},
           edges: ${JSON.stringify(weightedEdges)}

@@ -106,7 +106,7 @@
         setTimeout(function () {
           resetStyles();
           processNextState(index + 1);
-        }, 5000);
+        }, 2000);
       }
     }
 

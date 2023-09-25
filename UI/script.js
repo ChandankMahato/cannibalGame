@@ -33,6 +33,7 @@
 
     document.getElementById("pause-play-button").addEventListener("click", toggleAnimation);
 
+
     function resetStyles() {
       boatLeft.style.display = "";
       boatRight.style.display = "";
@@ -120,6 +121,7 @@
       }
 
       displayStyles(index);
+
       document.getElementById("state-value").innerHTML = solutionStates[index];
       document.getElementById("step-value").innerHTML = (index-1) === -1 ? [0,0,0] : solution[index-1];
       currentIndex = index + 1; //important

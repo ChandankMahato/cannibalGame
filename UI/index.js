@@ -21,6 +21,20 @@ function createScriptFile(solution) {
       solutionStates.push(nextState);
     }
 
+    var animationPaused = false;
+
+    var currentIndex = 0; // Add a variable to track the current state index
+    function toggleAnimation() {
+      animationPaused = !animationPaused; // Toggle the animationPaused variable
+      if (!animationPaused) {
+        // If animation is not paused, continue the animation
+        processNextState(currentIndex);
+      }
+    }
+
+    document.getElementById("pause-play-button").addEventListener("click", toggleAnimation);
+
+
     function resetStyles() {
       boatLeft.style.display = "";
       boatRight.style.display = "";
@@ -38,12 +52,8 @@ function createScriptFile(solution) {
       }
     }
 
-    function processNextState(index) {
-      if (index >= solutionStates.length) {
-        return;
-      }
-
-      var currentState = solutionStates[index];
+    function displayStyles(index){
+       var currentState = solutionStates[index];
 
       if (JSON.stringify(currentState) === JSON.stringify([3, 3, 1])) {
         document.getElementById("wooden-plank-1").style.marginTop = "25px";
@@ -99,9 +109,23 @@ function createScriptFile(solution) {
           manElement.style.display = "none";
         }
       }
+    }
+
+    function processNextState(index) {
+      if (animationPaused) {
+        displayStyles(index-1);
+        return;
+      }
+      
+      if (index >= solutionStates.length) {
+        return;
+      }
+
+      displayStyles(index);
 
       document.getElementById("state-value").innerHTML = solutionStates[index];
       document.getElementById("step-value").innerHTML = (index-1) === -1 ? [0,0,0] : solution[index-1];
+      currentIndex = index + 1; //important
       if (index < solutionStates.length - 1) {
         // Check if not the last iteration
         setTimeout(function () {

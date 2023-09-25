@@ -225,12 +225,12 @@ for (let i = 0; i < to.length; i++) {
 //   return convertedData;
 // }
 
-fs.writeFile("./StateSpace/data.txt", tree.join("").trim(), (err) => {
+fs.writeFile("./fullBFS/data.txt", tree.join("").trim(), (err) => {
   if (err) {
     console.error(err);
   } else {
     console.log("File write completed. Executing drawGraph.js...");
-    exec("node ./StateSpace/drawGraph.js", (error, stdout, stderr) => {
+    exec("node ./fullBFS/drawGraph.js", (error, stdout, stderr) => {
       if (error) {
         console.error(`Error executing drawGraph.js: ${error}`);
         return;

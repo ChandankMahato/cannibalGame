@@ -19,16 +19,17 @@ function extractData(path) {
   const nodes = [];
   edges.forEach((edge) => {
     if (!nodes.some((node) => node.id === edge.from)) {
+      
       nodes.push({ id: edge.from, color: edge.color, level: edge.fromLevel });
     }
     if (!nodes.some((node) => node.id === edge.to)) {
-      //   if (edge.to == [3, 2, 0]) {
-      //     nodes.push({ id: edge.to, color: 1, level: edge.toLevel });
-      //   } else if (edge.to == [0, 0, 0]) {
-      //     nodes.push({ id: edge.to, color: 3, level: edge.toLevel });
-      //   } else {
-      nodes.push({ id: edge.to, color: edge.color, level: edge.toLevel });
-      // }
+      if(edge.to == JSON.stringify([3,2,0])){
+        nodes.push({ id: edge.to, color: 3, level: edge.toLevel });
+      }else if (edge.to == JSON.stringify([0,0,0])){
+        nodes.push({ id: edge.to, color: 4, level: edge.toLevel });
+      }else{
+        nodes.push({ id: edge.to, color: edge.color, level: edge.toLevel });
+      }
     }
   });
   return { edges: edges, nodes: nodes };

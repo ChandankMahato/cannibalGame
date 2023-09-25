@@ -1,10 +1,10 @@
 function createHtmlContent(nodes, edges, type) {
-  const weightedEdges = edges.map((edge) => ({
-    from: edge.from,
-    to: edge.to,
-    label: edge.distance.toString(),
-  }));
-
+  // const weightedEdges = edges.map((edge) => ({
+  //   from: edge.from,
+  //   to: edge.to,
+  //   label: edge.distance.toString(),
+  //  }));
+  const weightedEdges = edges;
   return `
     <!DOCTYPE html>
     <html>
@@ -38,11 +38,8 @@ function createHtmlContent(nodes, edges, type) {
 
     .red,
     .green,
-    .yellow,
-    .blue, 
-    .purple {
-      width: 20%;
-      color: white;
+    .yellow {
+      width: 33%;
     }
 
     .red {
@@ -55,13 +52,6 @@ function createHtmlContent(nodes, edges, type) {
 
     .yellow {
       background-color: yellow;
-      color: black;
-    }
-    .blue {
-      background-color: blue;
-    }
-    .purple {
-      background-color: purple;
     }
   </style>
     </head>
@@ -72,9 +62,6 @@ function createHtmlContent(nodes, edges, type) {
       <h2 class="red">Killed</h2>
       <h2 class="green">Explored</h2>
       <h2 class="yellow">Unexplored</h2>
-      <h2 class="blue">Unexpandable</h2>
-      <h2 class="purple">Goal Node</h2>
-      
     </div>
   </div>
       <div id="network-container"> 
@@ -87,7 +74,7 @@ function createHtmlContent(nodes, edges, type) {
           nodes: ${JSON.stringify(
             nodes.map((node) => ({
               id: node.id,
-              label: node.id,
+              label: node.label,
               color:
                 node.color == 1
                   ? "red"
@@ -95,8 +82,7 @@ function createHtmlContent(nodes, edges, type) {
                   ? "green"
                   : node.color == "2"
                   ? "yellow"
-                  : node.color == "3"? "blue"
-                  : "purple",
+                  : "blue",
               level: node.level,
             }))
           )},
@@ -116,8 +102,7 @@ function createHtmlContent(nodes, edges, type) {
       },
       nodes: {
         font: {
-          size: 28,
-          color: '#ffffff'
+          size: 28
         }
       }
     };

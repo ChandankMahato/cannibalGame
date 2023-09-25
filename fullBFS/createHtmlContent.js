@@ -1,10 +1,10 @@
-function createHtmlContent(nodes, edges, type) {
-  // const weightedEdges = edges.map((edge) => ({
-  //   from: edge.from,
-  //   to: edge.to,
-  //   label: edge.distance.toString(),
-  //  }));
-  const weightedEdges = edges;
+function createHtmlContent(nodes, edges, type, nodeMapping) {
+  const weightedEdges = edges.map((edge) => ({
+    from: nodeMapping[edge.from],
+    to: nodeMapping[edge.to],
+    label: edge.distance.toString(),
+  }));
+  // const weightedEdges = edges;
   return `
     <!DOCTYPE html>
     <html>
@@ -93,8 +93,8 @@ function createHtmlContent(nodes, edges, type) {
         hierarchical: {
           direction: 'UD',
           sortMethod: 'directed',
-          levelSeparation: 80,
-          nodeSpacing: 150,
+          levelSeparation: 100,
+          nodeSpacing: 200,
         }
       },
       physics: {
@@ -102,7 +102,7 @@ function createHtmlContent(nodes, edges, type) {
       },
       nodes: {
         font: {
-          size: 28
+          size: 15
         }
       }
     };

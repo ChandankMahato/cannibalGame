@@ -136,8 +136,12 @@ function bfs(initialState) {
     console.log(`The children of ${node.state}:`);
     for (const child of children) {
       if (child.isGoal()) {
-        from.push([node.state, node.depth]);
-        to.push([child.state, child.depth]);
+        from.push([
+          node.state,
+          node.depth,
+          node.parent == null ? "null" : node.parent.state,
+        ]);
+        to.push([child.state, child.depth, child.parent.state]);
         weight.push(child.action);
         console.log("\n");
         let isSolution = child.isSolution();
@@ -158,8 +162,12 @@ function bfs(initialState) {
       }
       if (child.isValid()) {
         q.push(child);
-        from.push([node.state, node.depth]);
-        to.push([child.state, child.depth]);
+        from.push([
+          node.state,
+          node.depth,
+          node.parent == null ? "null" : node.parent.state,
+        ]);
+        to.push([child.state, child.depth, child.parent.state]);
         weight.push(child.action);
         // explored.push(child.state);
       }
@@ -186,8 +194,12 @@ for (let i = 0; i < to.length; i++) {
   if (isSolution) {
     let appendData =
       JSON.stringify(from[i][0]) +
+      "," +
+      JSON.stringify(from[i][2]) +
       " " +
       JSON.stringify(to[i][0]) +
+      "," +
+      JSON.stringify(to[i][2]) +
       " " +
       JSON.stringify(weight[i]) +
       " " +
@@ -201,8 +213,12 @@ for (let i = 0; i < to.length; i++) {
   } else {
     let appendData =
       JSON.stringify(from[i][0]) +
+      "," +
+      JSON.stringify(from[i][2]) +
       " " +
       JSON.stringify(to[i][0]) +
+      "," +
+      JSON.stringify(to[i][2]) +
       " " +
       JSON.stringify(weight[i]) +
       " " +

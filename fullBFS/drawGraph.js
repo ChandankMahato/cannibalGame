@@ -2,12 +2,13 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const { extractData } = require("./extractData");
 const { createHtmlContent } = require("./createHtmlContent");
-const data = extractData("./fullBFS/test.txt");
+const nodeMapping = {};
+const data = extractData("./fullBFS/data.txt", nodeMapping);
 const nodes = data.nodes;
 const edges = data.edges;
 fs.writeFile(
   "./fullBFS/fullBFS.html",
-  createHtmlContent(nodes, edges, "State Space Tree"),
+  createHtmlContent(nodes, edges, "State Space Tree", nodeMapping),
   (err) => {
     if (err) {
       console.error(err);

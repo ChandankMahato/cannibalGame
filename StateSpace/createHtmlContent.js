@@ -73,7 +73,7 @@ function createHtmlContent(nodes, edges, type) {
       <h2 class="green">Explored</h2>
       <h2 class="yellow">Unexplored</h2>
       <h2 class="blue">Unexpandable</h2>
-      <h2 class="purple">Goal Node</h2>
+      <h2 class="purple">Goal State</h2>
       
     </div>
   </div>
@@ -95,7 +95,8 @@ function createHtmlContent(nodes, edges, type) {
                   ? "green"
                   : node.color == "2"
                   ? "yellow"
-                  : node.color == "3"? "blue"
+                  : node.color == "3"
+                  ? "blue"
                   : "purple",
               level: node.level,
             }))

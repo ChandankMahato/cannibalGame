@@ -6,23 +6,18 @@ class EightPuzzleState {
         this.move = move;
         this.level = level;
     }
-
     toString() {
         return JSON.stringify(this.state);
     }
-
     isEqual(other) {
         return JSON.stringify(this.state) === JSON.stringify(other.state);
     }
-
     hash() {
         return JSON.stringify(this.state);
     }
-
     isGoal(goalState) {
         return JSON.stringify(this.state) === JSON.stringify(goalState);
     }
-
     getPossibleMoves() {
         const moves = [];
         for (let i = 0; i < 3; i++) {
@@ -37,7 +32,6 @@ class EightPuzzleState {
         }
         return moves;
     }
-
     generateChild(move) {
         const newState = this.state.map(row => [...row]);
         for (let i = 0; i < 3; i++) {
@@ -51,7 +45,6 @@ class EightPuzzleState {
         return new EightPuzzleState(newState, this, move, this.level + 1);
     }
 }
-
 function calculateMisplacedTiles(currentState, goalState) {
     let misplaced = 0;
     for (let i = 0; i < 3; i++) {
@@ -63,7 +56,6 @@ function calculateMisplacedTiles(currentState, goalState) {
     }
     return misplaced;
 }
-
 function solveEightPuzzle(initialState, goalState) {
     const queue = [];
     const visited = new Set();
@@ -82,14 +74,12 @@ function solveEightPuzzle(initialState, goalState) {
         level: initialNode.level,
         hValue: `g=${initialNode.level}, h=${hValue}, f=${initialNode.level + hValue}`,
     });
-
     while (queue.length) {
         const currentNode = queue.shift();
 
         if (currentNode.isGoal(goalState)) {
             break;
         }
-
         const siblings = [];
         for (const move of currentNode.getPossibleMoves()) {
             const childNode = currentNode.generateChild(move);

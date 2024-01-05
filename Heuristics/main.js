@@ -3,32 +3,25 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const { createHtmlContent } = require("./createHTMLContent");
 const {solveEightPuzzle } = require("./heuristics");
-
-function screen2() {
+function solve() {
     const initial_state = [
         [2, 8, 3],
         [1, 6, 4],
         [7, 0, 5]
     ];
-
     const goal_state = [
         [1, 2, 3],
         [8, 0, 4],
         [7, 6, 5]
     ];
-
     const [nodes, edges] = solveEightPuzzle(initial_state, goal_state);
-
     const graph_data = {
         nodes: nodes,
         edges: edges
     };
     return graph_data;
 }
-
-const graph_data = screen2();
-
-
+const graph_data = solve();
 const nodesArray = [];
 graph_data.nodes.forEach(function (data, index) {
     var dataarray = JSON.parse(data.label);
@@ -41,7 +34,6 @@ graph_data.nodes.forEach(function (data, index) {
     var svgheight = 400;
     var rectwidth = 133.33;
     var rectheight = 133.33;
-
     var svg = '<svg width="' + svgwidth + '" height="' + svgheight + '" xmlns="http://www.w3.org/2000/svg">';
     svg += '<rect x="0" y="0" width="' + rectwidth + '" height="' + rectheight + '" fill="' + fillcolor + '" stroke="' + strokecolor + '" stroke-width="' + strokewidth + '" />';
     svg += '<rect x="' + rectwidth + '" y="0" width="' + rectwidth + '" height="' + rectheight + '" fill="' + fillcolor + '" stroke="' + strokecolor + '" stroke-width="' + strokewidth + '" />';
@@ -62,7 +54,6 @@ graph_data.nodes.forEach(function (data, index) {
     svg += '<text x="' + (rectwidth + (rectwidth / 2)) + '" y="' + ((2 * rectheight) + (rectheight / 2)) + '" font-size="' + fontsize + '" text-anchor="middle" fill="' + textcolor + '">' + dataarray[2][1] + '</text>';
     svg += '<text x="' + ((2 * rectwidth) + (rectwidth / 2)) + '" y="' + ((2 * rectheight) + (rectheight / 2)) + '" font-size="' + fontsize + '" text-anchor="middle" fill="' + textcolor + '">' + dataarray[2][2] + '</text>';
     svg += '</svg>';
-
     nodesArray.push({
         id: data.id,
         shape: 'image',
@@ -71,12 +62,10 @@ graph_data.nodes.forEach(function (data, index) {
         label: data.hValue
     });
 });
-
 var data = {
     nodes: nodesArray,
     edges: graph_data.edges,
 };
-
 fs.writeFile(
   "./Heuristics/heuristics.html",
   createHtmlContent(data),
